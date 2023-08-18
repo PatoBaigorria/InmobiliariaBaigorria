@@ -19,5 +19,25 @@ public class PropietariosController : Controller
         List<Propietario> propietarios = repositorio.ObtenerPropietarios();
         return View(propietarios);
     }
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+    [HttpPost]
+    public IActionResult Create(Propietario propietario)
+    {
+        try
+        {
+            RepositorioPropietario repositorio = new RepositorioPropietario();
+            repositorio.Alta(propietario);
+            return RedirectToAction("Index");
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+
+    }
 
 }
