@@ -7,7 +7,7 @@ public class RepositorioPropietario
     protected readonly string connectionString;
     public RepositorioPropietario()
     {
-        connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariaBaigorria,SslModel=none";
+        connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorria;";
     }
 
     public List<Propietario> ObtenerPropietarios()
