@@ -37,7 +37,28 @@ public class PropietariosController : Controller
         {
             throw;
         }
-
     }
 
+    [HttpGet]
+    public IActionResult Update(int id)
+    {
+        RepositorioPropietario repositorio = new RepositorioPropietario();
+        Propietario x = repositorio.ObtenerPorId(id);
+        return View(x);
+    }
+    [HttpPost]
+    public IActionResult Update(Propietario propietario)
+    {
+        try
+        {
+            RepositorioPropietario repositorio = new RepositorioPropietario();
+            repositorio.Alta(propietario);
+            return RedirectToAction("Index");
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+
+    }
 }

@@ -26,12 +26,12 @@ public class RepositorioPropietario
                         res.Add(new Propietario
                         {
                             Id = reader.GetInt32("Id"),
-                            Dni = reader.GetInt32("Dni"),
+                            Dni = reader.GetString("Dni"),
                             Nombre = reader.GetString("Nombre"),
                             Apellido = reader.GetString("Apellido"),
                             Direccion = reader.GetString("Direccion"),
                             Email = reader.GetString("Email"),
-                            Telefono = reader.GetInt32("Telefono"),
+                            Telefono = reader.GetString("Telefono"),
                         });
                     }
                 }
@@ -60,6 +60,37 @@ public class RepositorioPropietario
                 conn.Open();
                 res = Convert.ToInt32(cmd.ExecuteScalar());
                 propietario.Id = res;
+                conn.Close();
+            }
+        }
+        return res;
+    }
+    public Propietario ObtenerPorId(int id)
+    {
+        Propietario res = null;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = "SELECT Id,Dni,Nombre,Apellido,Direccion,Email,Telefono FROM propietarios WHERE Id=@Id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res = new Propietario
+                        {
+                            Id = reader.GetInt32("Id"),
+                            Dni = reader.GetString("Dni"),
+                            Nombre = reader.GetString("Nombre"),
+                            Apellido = reader.GetString("Apellido"),
+                            Direccion = reader.GetString("Direccion"),
+                            Email = reader.GetString("Email"),
+                            Telefono = reader.GetString("Telefono"),
+                        };
+                    }
+                }
                 conn.Close();
             }
         }

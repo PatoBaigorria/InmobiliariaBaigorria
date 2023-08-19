@@ -1,0 +1,23 @@
+﻿@model inmobiliariaBaigorria.Models.Propietario
+@{
+    ViewData["Title"] = "Editar Propietario";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Editar Propietario</h1>
+    <form action="" method="POST">
+        <label for="fDni">DNI</label><br>
+        <input type="text" id="fDni" name="Dni" value="@Model.Dni" required> <br>
+        <label for="fNombre">Nombre</label><br>
+        <input type="text" id="fNombre" name="Nombre" value="@Model.Nombre" required> <br>
+        <label for="fApellido">Apellido</label><br>
+        <input type="text" id="fApellido" name="Apellido" value="@Model.Apellido" required> <br>
+        <label for="fDireccion">Direccion</label><br>
+        <input type="text" id="fDireccion" name="Direccion" value="@Model.Direccion" required> <br>
+        <label for="fEmail">Email</label><br>
+        <input type="email" id="fEmail" name="Email" value="@Model.Email"> <br>
+        <label for="fTelefono">Telefono</label><br>
+        <input type="text" id="fTelefono" name="Telefono" value="@Model.Telefono"> <br>
+        <button>Guardar</button>
+    </form>
+</div>

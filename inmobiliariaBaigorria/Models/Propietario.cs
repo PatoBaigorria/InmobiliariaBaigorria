@@ -4,7 +4,7 @@ public class Propietario
 {
     public int Id { get; set; }
 
-    public int Dni { get; set; }
+    public string Dni { get; set; } = "";
 
     public string Nombre { get; set; } = "";
 
@@ -14,6 +14,6 @@ public class Propietario
 
     public string? Email { get; set; }
 
-    public int? Telefono { get; set; }
+    public string? Telefono { get; set; }
 
 }
