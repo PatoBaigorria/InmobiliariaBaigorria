@@ -4,34 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using inmobiliariaBaigorria.Models;
 
 namespace inmobiliariaBaigorria.Controllers
 {
-    public class PropietariosController : Controller
+    public class ContratosController : Controller
     {
-        // GET: Propietarios
+        // GET: Contratos
         public ActionResult Index()
         {
-            RepositorioPropietario repositorio = new RepositorioPropietario();
-            List<Propietario> propietarios = repositorio.ObtenerPropietarios();
-
-            return View(propietarios);
+            return View();
         }
 
-        // GET: Propietarios/Details/5
+        // GET: Contratos/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Propietarios/Create
+        // GET: Contratos/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Propietarios/Create
+        // POST: Contratos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -48,13 +44,13 @@ namespace inmobiliariaBaigorria.Controllers
             }
         }
 
-        // GET: Propietarios/Edit/5
+        // GET: Contratos/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Propietarios/Edit/5
+        // POST: Contratos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -71,13 +67,13 @@ namespace inmobiliariaBaigorria.Controllers
             }
         }
 
-        // GET: Propietarios/Delete/5
+        // GET: Contratos/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Propietarios/Delete/5
+        // POST: Contratos/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

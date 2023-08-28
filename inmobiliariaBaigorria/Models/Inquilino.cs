@@ -6,22 +6,19 @@ using System.Threading.Tasks;
 
 namespace inmobiliariaBaigorria.Models;
 
-public class Propietario
+public class Inquilino
 {
     [Key]
-    [Display(Name = "Código Interno")]
+    [Display(Name = "Código")]
     public int Id { get; set; }
 
     [Required]
     public string Dni { get; set; } = "";
 
     [Required]
-    public string Nombre { get; set; } = "";
+    public string NombreCompleto { get; set; } = "";
 
     [Required]
-    public string Apellido { get; set; } = "";
-
-    [Required, Display(Name = "Dirección")]
     public string Direccion { get; set; } = "";
 
     [EmailAddress]
@@ -29,10 +26,9 @@ public class Propietario
 
     [Display(Name = "Teléfono")]
     public string? Telefono { get; set; }
-
     public override string ToString()
     {
-        return $"{Nombre} {Apellido}";
+        return $"{NombreCompleto}";
     }
 
 }

@@ -1,4 +1,11 @@
 using MySql.Data.MySqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace inmobiliariaBaigorria.Models;
 
@@ -67,7 +74,7 @@ public class RepositorioPropietario
     }
     public Propietario ObtenerPorId(int id)
     {
-        Propietario res = null;
+        Propietario res = new Propietario();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = "SELECT Id,Dni,Nombre,Apellido,Direccion,Email,Telefono FROM propietarios WHERE Id=@Id";
@@ -79,22 +86,72 @@ public class RepositorioPropietario
                 {
                     if (reader.Read())
                     {
-                        res = new Propietario
-                        {
-                            Id = reader.GetInt32("Id"),
-                            Dni = reader.GetString("Dni"),
-                            Nombre = reader.GetString("Nombre"),
-                            Apellido = reader.GetString("Apellido"),
-                            Direccion = reader.GetString("Direccion"),
-                            Email = reader.GetString("Email"),
-                            Telefono = reader.GetString("Telefono"),
-                        };
+
+
+                        res.Id = reader.GetInt32("Id");
+                        res.Dni = reader.GetString("Dni");
+                        res.Nombre = reader.GetString("Nombre");
+                        res.Apellido = reader.GetString("Apellido");
+                        res.Direccion = reader.GetString("Direccion");
+                        res.Email = reader.GetString("Email");
+                        res.Telefono = reader.GetString("Telefono");
+
                     }
+
                 }
                 conn.Close();
             }
         }
+
+        if (res == null)
+        {
+            throw new Exception("No se encontró ningún Propietario con el ID especificado.");
+        }
+
         return res;
     }
+
+    public void ModificarPropietario(Propietario p)
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = "UPDATE propietarios SET Dni=@Dni, Nombre=@Nombre, Apellido=@Apellido, Direccion=@Direccion, Email=@Email, Telefono=@Telefono WHERE Id=@Id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", p.Id);
+                cmd.Parameters.AddWithValue("@Dni", p.Dni);
+                cmd.Parameters.AddWithValue("@Nombre", p.Nombre);
+                cmd.Parameters.AddWithValue("@Apellido", p.Apellido);
+                cmd.Parameters.AddWithValue("@Direccion", p.Direccion);
+                cmd.Parameters.AddWithValue("@Email", p.Email);
+                cmd.Parameters.AddWithValue("@Telefono", p.Telefono);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+    }
+
+    public void EliminarPropietario(int id)
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = "DELETE FROM propietarios WHERE Id=@Id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                int rowsAffected = cmd.ExecuteNonQuery(); // Obtiene la cantidad de filas afectadas por la eliminación
+                conn.Close();
+
+                if (rowsAffected == 0)
+                {
+                    throw new InvalidOperationException($"No se encontró ningún propietario con el ID {id} para eliminar.");
+                }
+            }
+        }
+    }
+
+
 
 }
