@@ -30,8 +30,8 @@ public class RepositorioInmueble
                 cmd.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
                 cmd.Parameters.AddWithValue("@Uso", inmueble.Uso);
                 cmd.Parameters.AddWithValue("@CantidadDeAmbientes", inmueble.CantidadDeAmbientes);
-                cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud);
-                cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud);
+                cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud.HasValue ? inmueble.Longitud.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud.HasValue ? inmueble.Latitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
                 cmd.Parameters.AddWithValue("@PropietarioId", inmueble.PropietarioId);
                 conn.Open();
@@ -91,7 +91,7 @@ public class RepositorioInmueble
 
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var sql = @"SELECT Id, Tipo, Uso, CantidadDeAmbientes, Longitud, Latitud, Precio, PropietarioId, p.Nombre, p.Apellido 
+            var sql = @"SELECT i.Id, Tipo, Uso, CantidadDeAmbientes, Longitud, Latitud, Precio, p.Id as PropietarioId, p.Nombre as PropietarioNombre, p.Apellido as PropietarioApellido
         FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
@@ -109,12 +109,12 @@ public class RepositorioInmueble
                             Longitud = reader.GetDecimal("Longitud"),
                             Latitud = reader.GetDecimal("Latitud"),
                             Precio = reader.GetDecimal("Precio"),
-                            PropietarioId = reader.GetInt32("PropietarioId"),
+                            //PropietarioId = reader.GetInt32("PropietarioId"),
                             Duenio = new Propietario
                             {
                                 Id = reader.GetInt32("PropietarioId"),
-                                Nombre = reader.GetString("Nombre"),
-                                Apellido = reader.GetString("Apellido"),
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
                             }
                         };
                         inmuebles.Add(inmueble);
@@ -132,15 +132,14 @@ public class RepositorioInmueble
         List<Inmueble> inmuebles = new List<Inmueble>();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var sql = @"SELECT {nameof(Inmueble.Id)}, Tipo, Uso, CantidadDeAmbientes, Longitud, Latitud, Precio, PropietarioId, p.Nombre, p.Apellido  
-        FROM inmuebles i JOIN Propietarios p ON i.PropietarioId = id 
-        WHERE PropietarioId = @Id";
+            var sql = @"SELECT  i.Id as InmuebleId, Tipo, Uso, CantidadDeAmbientes, Longitud, Latitud, Precio, PropietarioId, p.Nombre, p.Apellido  
+        FROM inmuebles i JOIN Propietarios p ON i.PropietarioId = p.Id";
 
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
 
-                //cmd.Parameters.Add("@Id", MySqlDbType.Int).Value = Id;  //VERRR
-                cmd.CommandType = CommandType.Text;  //VERRR
+
+                cmd.CommandType = CommandType.Text;
                 conn.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -148,7 +147,7 @@ public class RepositorioInmueble
                     {
                         Inmueble inmueble = new Inmueble
                         {
-                            Id = reader.GetInt32("Id"),
+                            Id = reader.GetInt32("InmuebleId"),
                             Tipo = reader.GetString("Tipo"),
                             Uso = reader.GetString("Uso"),
                             CantidadDeAmbientes = reader.GetInt32("CantidadDeAmbientes"),

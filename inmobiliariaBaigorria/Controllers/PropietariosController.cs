@@ -10,19 +10,19 @@ namespace inmobiliariaBaigorria.Controllers
 {
     public class PropietariosController : Controller
     {
+        private RepositorioPropietario repositorio = new RepositorioPropietario();
         // GET: Propietarios
         public ActionResult Index()
         {
-            RepositorioPropietario repositorio = new RepositorioPropietario();
-            List<Propietario> propietarios = repositorio.ObtenerPropietarios();
 
-            return View(propietarios);
+
+            return View(repositorio.ObtenerPropietarios());
         }
 
         // GET: Propietarios/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(repositorio.ObtenerPorId(id));
         }
 
         // GET: Propietarios/Create
@@ -31,42 +31,54 @@ namespace inmobiliariaBaigorria.Controllers
             return View();
         }
 
-        // POST: Propietarios/Create
+        // POST: Propietario/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Propietario propietario)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                repositorio.Alta(propietario);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (System.Exception)
             {
-                return View();
+                throw;
             }
         }
 
         // GET: Propietarios/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(repositorio.ObtenerPorId(id));
         }
 
         // POST: Propietarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Propietario propietario)
         {
             try
             {
                 // TODO: Add update logic here
 
+
+                Propietario p = repositorio.ObtenerPorId(id);
+
+                p.Dni = propietario.Dni;
+                p.Nombre = propietario.Nombre;
+                p.Apellido = propietario.Apellido;
+                p.Direccion = propietario.Direccion;
+                p.Email = propietario.Email;
+                p.Telefono = propietario.Telefono;
+
+                repositorio.ModificarPropietario(p);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                // Maneja la excepción o imprime detalles para depuración
+                Console.WriteLine(ex.ToString());
                 return View();
             }
         }
@@ -74,7 +86,7 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Propietarios/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(repositorio.ObtenerPorId(id));
         }
 
         // POST: Propietarios/Delete/5
@@ -85,7 +97,7 @@ namespace inmobiliariaBaigorria.Controllers
             try
             {
                 // TODO: Add delete logic here
-
+                repositorio.EliminarPropietario(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -62,8 +62,8 @@ public class RepositorioPropietario
                 cmd.Parameters.AddWithValue("@Nombre", propietario.Nombre);
                 cmd.Parameters.AddWithValue("@Apellido", propietario.Apellido);
                 cmd.Parameters.AddWithValue("@Direccion", propietario.Direccion);
-                cmd.Parameters.AddWithValue("@Email", propietario.Email);
-                cmd.Parameters.AddWithValue("@Telefono", propietario.Telefono);
+                cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(propietario.Email) ? "" : propietario.Email);
+                cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrEmpty(propietario.Telefono) ? "" : propietario.Telefono);
                 conn.Open();
                 res = Convert.ToInt32(cmd.ExecuteScalar());
                 propietario.Id = res;
@@ -93,8 +93,8 @@ public class RepositorioPropietario
                         res.Nombre = reader.GetString("Nombre");
                         res.Apellido = reader.GetString("Apellido");
                         res.Direccion = reader.GetString("Direccion");
-                        res.Email = reader.GetString("Email");
-                        res.Telefono = reader.GetString("Telefono");
+                        res.Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "";
+                        res.Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "";
 
                     }
 
@@ -115,7 +115,7 @@ public class RepositorioPropietario
     {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var sql = "UPDATE propietarios SET Dni=@Dni, Nombre=@Nombre, Apellido=@Apellido, Direccion=@Direccion, Email=@Email, Telefono=@Telefono WHERE Id=@Id";
+            var sql = @"UPDATE propietarios SET Dni=@Dni, Nombre=@Nombre, Apellido=@Apellido, Direccion=@Direccion, Email=@Email, Telefono=@Telefono WHERE Id=@Id";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Id", p.Id);

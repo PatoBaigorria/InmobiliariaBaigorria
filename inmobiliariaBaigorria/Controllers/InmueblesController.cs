@@ -1,3 +1,4 @@
+using inmobiliariaBaigorria.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,11 @@ namespace inmobiliariaBaigorria.Controllers
 {
     public class InmueblesController : Controller
     {
+        private RepositorioInmueble repoI = new RepositorioInmueble();
         // GET: Inmuebles
         public ActionResult Index()
         {
-            return View();
+            return View(repoI.ObtenerTodosLosInmuebles());
         }
 
         // GET: Inmuebles/Details/5
@@ -30,17 +32,16 @@ namespace inmobiliariaBaigorria.Controllers
         // POST: Inmuebles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Inmueble inmueble)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                repoI.Alta(inmueble);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (System.Exception)
             {
-                return View();
+                throw;
             }
         }
 
