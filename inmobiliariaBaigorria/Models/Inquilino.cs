@@ -9,7 +9,7 @@ namespace inmobiliariaBaigorria.Models;
 public class Inquilino
 {
     [Key]
-    [Display(Name = "Código")]
+    [Display(Name = "Código Interno")]
     public int Id { get; set; }
 
     [Required]
@@ -18,7 +18,7 @@ public class Inquilino
     [Required]
     public string NombreCompleto { get; set; } = "";
 
-    [Required]
+    [Required, Display(Name = "Dirección")]
     public string Direccion { get; set; } = "";
 
     [EmailAddress]

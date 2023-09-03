@@ -4,21 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using inmobiliariaBaigorria.Models;
 
 namespace inmobiliariaBaigorria.Controllers
 {
     public class InquilinosController : Controller
     {
+        private RepositorioInquilino repo = new RepositorioInquilino();
         // GET: Inquilinos
         public ActionResult Index()
         {
-            return View();
+            return View(repo.ObtenerInquilinos());
         }
 
         // GET: Inquilinos/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(repo.ObtenerPorId(id));
         }
 
         // GET: Inquilinos/Create
@@ -30,39 +32,50 @@ namespace inmobiliariaBaigorria.Controllers
         // POST: Inquilinos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Inquilino inquilino)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                repo.Alta(inquilino);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (System.Exception)
             {
-                return View();
+                throw;
             }
         }
 
         // GET: Inquilinos/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(repo.ObtenerPorId(id));
         }
 
         // POST: Inquilinos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inquilino inquilino)
         {
             try
             {
                 // TODO: Add update logic here
+                Inquilino i = repo.ObtenerPorId(id);
+
+                i.Dni = inquilino.Dni;
+                i.NombreCompleto = inquilino.NombreCompleto;
+                i.Direccion = inquilino.Direccion;
+                i.Email = inquilino.Email;
+                i.Telefono = inquilino.Telefono;
+
+                repo.ModificarInquilino(i);
+
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                // Maneja la excepción o imprime detalles para depuración
+                Console.WriteLine(ex.ToString());
                 return View();
             }
         }
@@ -70,7 +83,7 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inquilinos/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(repo.ObtenerPorId(id));
         }
 
         // POST: Inquilinos/Delete/5
@@ -81,7 +94,7 @@ namespace inmobiliariaBaigorria.Controllers
             try
             {
                 // TODO: Add delete logic here
-
+                repo.EliminarInquilino(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

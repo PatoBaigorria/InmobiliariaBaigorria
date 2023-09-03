@@ -28,10 +28,10 @@ public class RepositorioInquilino
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Dni", inquilino.Dni);
-                cmd.Parameters.AddWithValue("@Nombre", inquilino.NombreCompleto);
+                cmd.Parameters.AddWithValue("@NombreCompleto", inquilino.NombreCompleto);
                 cmd.Parameters.AddWithValue("@Direccion", inquilino.Direccion);
-                cmd.Parameters.AddWithValue("@Email", inquilino.Email);
-                cmd.Parameters.AddWithValue("@Telefono", inquilino.Telefono);
+                cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(inquilino.Email) ? "" : inquilino.Email);
+                cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrEmpty(inquilino.Telefono) ? "" : inquilino.Telefono);
                 conn.Open();
                 res = Convert.ToInt32(cmd.ExecuteScalar());
                 inquilino.Id = res;
@@ -55,7 +55,7 @@ public class RepositorioInquilino
 
                 if (rowsAffected == 0)
                 {
-                    throw new InvalidOperationException($"No se encontró ningún Inquilino con el ID {id} para eliminar.");
+                    throw new InvalidOperationException($"No se encontró ningún Inquilino con el Id {id} para eliminar.");
                 }
             }
         }
@@ -70,7 +70,7 @@ public class RepositorioInquilino
             {
                 cmd.Parameters.AddWithValue("@Id", i.Id);
                 cmd.Parameters.AddWithValue("@Dni", i.Dni);
-                cmd.Parameters.AddWithValue("@Nombre", i.NombreCompleto);
+                cmd.Parameters.AddWithValue("@NombreCompleto", i.NombreCompleto);
                 cmd.Parameters.AddWithValue("@Direccion", i.Direccion);
                 cmd.Parameters.AddWithValue("@Email", i.Email);
                 cmd.Parameters.AddWithValue("@Telefono", i.Telefono);
@@ -100,8 +100,8 @@ public class RepositorioInquilino
                             Dni = reader.GetString("Dni"),
                             NombreCompleto = reader.GetString("NombreCompleto"),
                             Direccion = reader.GetString("Direccion"),
-                            Email = reader.GetString("Email"),
-                            Telefono = reader.GetString("Telefono"),
+                            Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString("Email"),
+                            Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
                         });
                     }
                 }
@@ -111,41 +111,41 @@ public class RepositorioInquilino
         return res;
     }
 
-    public Inquilino ObtenerPorDni(string dni)
+    public Inquilino ObtenerPorId(int id)
     {
-        Inquilino res;
+        Inquilino res = new Inquilino();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            var sql = "SELECT Id, Dni, NombreCompleto, Direccion, Email, Telefono FROM inquilinos WHERE Dni = @Dni";
+            var sql = "SELECT Id,Dni,NombreCompleto,Direccion,Email,Telefono FROM inquilinos WHERE Id=@Id";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@Dni", dni);
+                cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        res = new Inquilino
-                        {
-                            Id = reader.GetInt32("Id"),
-                            Dni = reader.GetString("Dni"),
-                            NombreCompleto = reader.GetString("NombreCompleto"),
-                            Direccion = reader.GetString("Direccion"),
-                            Email = reader.GetString("Email"),
-                            Telefono = reader.GetString("Telefono")
-                        };
+
+
+                        res.Id = reader.GetInt32("Id");
+                        res.Dni = reader.GetString("Dni");
+                        res.NombreCompleto = reader.GetString("NombreCompleto");
+                        res.Direccion = reader.GetString("Direccion");
+                        res.Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "";
+                        res.Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "";
+
                     }
-                    else
-                    {
-                        throw new Exception("No se encontró ningún Inquilino con el DNI especificado.");
-                    }
+
                 }
                 conn.Close();
             }
         }
 
+        if (res == null)
+        {
+            throw new Exception("No se encontró ningún Inquilino con el ID especificado.");
+        }
+
         return res;
     }
-
-
 }
