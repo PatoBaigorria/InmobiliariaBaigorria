@@ -26,6 +26,8 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inmuebles/Create
         public ActionResult Create()
         {
+
+
             return View();
         }
 
