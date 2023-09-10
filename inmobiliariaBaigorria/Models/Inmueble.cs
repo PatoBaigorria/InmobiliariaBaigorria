@@ -20,7 +20,7 @@ public class Inmueble
     public string Uso { get; set; } = "";
 
     [Required]
-    public int CantidadDeAmbientes { get; set; }
+    public int Ambientes { get; set; }
 
     public decimal? Longitud { get; set; }
 
@@ -28,6 +28,9 @@ public class Inmueble
 
     [Required]
     public decimal Precio { get; set; }
+    
+    [Required]
+    public bool Estado { get; set;}
 
     [Display(Name = "Dueño")]
     public int PropietarioId { get; set; }

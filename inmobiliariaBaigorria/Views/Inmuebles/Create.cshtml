@@ -1,9 +1,5 @@
 @model inmobiliariaBaigorria.Models.Inmueble
 
-@{
-    ViewData["Title"] = "Crear";
-}
-
 <h1>Crear</h1>
 
 <h4>Inmueble</h4>
@@ -36,9 +32,9 @@
                 <span asp-validation-for="Uso" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CantidadDeAmbientes" class="control-label"></label>
-                <input asp-for="CantidadDeAmbientes" class="form-control" />
-                <span asp-validation-for="CantidadDeAmbientes" class="text-danger"></span>
+                <label asp-for="Ambientes" class="control-label"></label>
+                <input asp-for="Ambientes" class="form-control" />
+                <span asp-validation-for="Ambientes" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Longitud" class="control-label"></label>
@@ -56,10 +52,26 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PropietarioId" class="control-label"></label>
-                <input asp-for="PropietarioId" class="form-control" />
+                <label asp-for="Estado" class="control-label"></label>
+                <select asp-for="Estado" class="form-control">
+                    <option value="">Seleccione un Estado</option>
+                    <option value="false">No Disponible</option>
+                    <option value="true">Disponible</option>
+                </select>
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Propietario</label>
+                <select class = "form-control" name = "PropietarioId">
+                     <option value="">Seleccione un Propietario</option>
+                    @foreach(var item in ViewBag.Propietario)
+                    {
+                        <option value = "@item.Id">@(item.ToString())</option>
+                    }
+                </select>
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
             </div>
+            <br>
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
@@ -68,6 +80,7 @@
 </div>
 
 <div>
+    <br>
     <a asp-action="Index">Volver a la Lista</a>
 </div>
 

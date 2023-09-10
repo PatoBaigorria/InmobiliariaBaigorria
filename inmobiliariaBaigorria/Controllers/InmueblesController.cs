@@ -10,6 +10,7 @@ namespace inmobiliariaBaigorria.Controllers
 {
     public class InmueblesController : Controller
     {
+        private RepositorioPropietario repoP = new RepositorioPropietario();
         private RepositorioInmueble repoI = new RepositorioInmueble();
         // GET: Inmuebles
         public ActionResult Index()
@@ -26,9 +27,18 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inmuebles/Create
         public ActionResult Create()
         {
+            try
+            {
+                var list = repoP.ObtenerPropietarios();
+                ViewBag.Propietario = list;
 
-
-            return View();
+                return View();
+            }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View();
+            }
         }
 
         // POST: Inmuebles/Create
@@ -43,7 +53,8 @@ namespace inmobiliariaBaigorria.Controllers
             }
             catch (System.Exception)
             {
-                throw;
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al guardar el inmueble.");
+                return View(inmueble); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
             }
         }
 
