@@ -130,6 +130,55 @@ public class RepositorioInmueble
         return inmuebles;
     }
 
+
+    public Inmueble ObtenerPorId(int id)
+    {
+        Inmueble res = new Inmueble();
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT i.Id as Id,Tipo,Uso,Ambientes,Longitud,Latitud,Precio,Estado,p.Id as PropietarioId, p.Nombre as PropietarioNombre, p.Apellido as PropietarioApellido 
+                    FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id
+                    WHERE i.Id = @Id";
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res.Id = reader.GetInt32("Id");
+                        res.Tipo = reader.GetString("Tipo");
+                        res.Uso = reader.GetString("Uso");
+                        res.Ambientes = reader.GetInt32("Ambientes");
+                        res.Longitud = reader.GetDecimal("Longitud");
+                        res.Latitud = reader.GetDecimal("Latitud");
+                        res.Precio = reader.GetDecimal("Precio");
+                        res.Estado = reader.GetBoolean("Estado");
+                        res.PropietarioId = reader.GetInt32("PropietarioId");
+                        res.Duenio = new Propietario
+                        {
+                            Id = reader.GetInt32("PropietarioId"),
+                            Nombre = reader.GetString("PropietarioNombre"),
+                            Apellido = reader.GetString("PropietarioApellido"),
+                        };
+
+                    }
+
+                }
+                conn.Close();
+            }
+        }
+
+        if (res == null)
+        {
+            throw new Exception("No se encontró ningún Inmueble con el ID especificado.");
+        }
+
+        return res;
+    }
+
     public List<Inmueble> ObtenerInmueblesPorPropietario(int id)
     {
         List<Inmueble> inmuebles = new List<Inmueble>();

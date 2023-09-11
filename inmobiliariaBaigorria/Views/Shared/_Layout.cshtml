@@ -26,12 +26,48 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <div class="menu-separator"></div>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contratos" asp-action="Index">Contratos</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Pagos" asp-action="Index">Pagos</a>
+                        </li>
+                    </ul>
                 </div>
+                <style>
+                    .menu-separator {
+                        margin-right: 0px; /* Ajusta el valor según tu preferencia */
+                    }
+                </style>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <div class="">
+                @if (ViewBag.Id != null)
+                {
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <strong>¡Éxito!</strong> Datos Guardados Correctamente!
+                        <button type="button" class ="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&#x2714;</span>
+
+                        </button>
+                    </div>
+
+                }
+            </div>
             @RenderBody()
         </main>
     </div>

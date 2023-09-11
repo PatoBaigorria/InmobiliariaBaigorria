@@ -59,9 +59,6 @@ namespace inmobiliariaBaigorria.Controllers
         {
             try
             {
-                // TODO: Add update logic here
-
-
                 Propietario p = repositorio.ObtenerPorId(id);
 
                 p.Dni = propietario.Dni;

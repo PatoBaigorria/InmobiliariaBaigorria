@@ -15,13 +15,14 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inmuebles
         public ActionResult Index()
         {
+            ViewBag.Id = TempData["Id"];
             return View(repoI.ObtenerTodosLosInmuebles());
         }
 
         // GET: Inmuebles/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(repoI.ObtenerPorId(id));
         }
 
         // GET: Inmuebles/Create
@@ -29,9 +30,7 @@ namespace inmobiliariaBaigorria.Controllers
         {
             try
             {
-                var list = repoP.ObtenerPropietarios();
-                ViewBag.Propietario = list;
-
+                ViewBag.Propietario = repoP.ObtenerPropietarios();
                 return View();
             }
             catch (System.Exception)
@@ -48,8 +47,16 @@ namespace inmobiliariaBaigorria.Controllers
         {
             try
             {
-                repoI.Alta(inmueble);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    repoI.Alta(inmueble);
+                    TempData["Id"] = inmueble.Id;
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                    return View(inmueble);
+
             }
             catch (System.Exception)
             {
@@ -61,22 +68,46 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inmuebles/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            try
+            {
+                var aux = repoI.ObtenerPorId(id);
+                ViewBag.Propietario = repoP.ObtenerPropietarios();
+                return View(aux);
+            }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View();
+            }
+
         }
 
         // POST: Inmuebles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
             {
-                // TODO: Add update logic here
+                Inmueble i = repoI.ObtenerPorId(id);
+
+                i.Tipo = inmueble.Tipo;
+                i.Uso = inmueble.Uso;
+                i.Ambientes = inmueble.Ambientes;
+                i.Longitud = inmueble.Longitud;
+                i.Latitud = inmueble.Latitud;
+                i.Precio = inmueble.Precio;
+                i.Estado = inmueble.Estado;
+                i.Duenio = inmueble.Duenio;
+
+                repoI.ModificarInmueble(i);
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                // Maneja la excepción o imprime detalles para depuración
+                Console.WriteLine(ex.ToString());
                 return View();
             }
         }
@@ -84,7 +115,7 @@ namespace inmobiliariaBaigorria.Controllers
         // GET: Inmuebles/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(repoI.ObtenerPorId(id));
         }
 
         // POST: Inmuebles/Delete/5
@@ -94,7 +125,7 @@ namespace inmobiliariaBaigorria.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                repoI.EliminarInmueble(id);
 
                 return RedirectToAction(nameof(Index));
             }

@@ -32,7 +32,13 @@ public class Propietario
 
     public override string ToString()
     {
-        return $"{Nombre} {Apellido}";
+        //return $"{Nombre} {Apellido}";
+        var res = $"{Nombre} {Apellido}";
+        if (!String.IsNullOrEmpty(Dni))
+        {
+            res += $" ({Dni})";
+        }
+        return res;
     }
 
 }
